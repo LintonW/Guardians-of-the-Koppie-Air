@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Air Guardian</title>
+
         <!-- A-Frame core library -->
         <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
@@ -12,6 +13,42 @@
 
         <!-- Look-at component -->
         <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+                font-family: Arial, sans-serif;
+            }
+
+            /* Dialogue box styling */
+            #dialogueBox {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.85);
+                color: white;
+                border-radius: 20px;
+                padding: 15px 20px;
+                font-size: 15px;
+                line-height: 1.4;
+                display: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            }
+
+            #dialogueBox strong {
+                display: block;
+                font-size: 13px;
+                color: #ccc;
+                font-style: italic;
+                margin-bottom: 5px;
+            }
+
+            .highlight {
+                color: #d9fdfc;
+            }
+        </style>
     </head>
     <body>
         <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
@@ -41,6 +78,12 @@
         <!-- HTML audio element for the guardian's theme music -->
         <audio id="airGuardianAudio" src="assets/air/air-guardian-theme.mp3" preload="auto"></audio>
 
+        <!-- Dialogue box -->
+        <div id="dialogueBox">
+            <strong>Air Guardian</strong>
+            <span id="dialogueText"></span>
+        </div>
+
         <script>
             // Wait for the A-Frame scene to finish loading
             document.querySelector("a-scene").addEventListener("loaded", function () {
@@ -48,6 +91,16 @@
                 const airRunestone = document.querySelector("#airRunestone");
                 const airTapImage = airRunestone.querySelector("#tapToStart4");
                 const airSound = document.querySelector("#airGuardianAudio");
+                const dialogueBox = document.querySelector("#dialogueBox");
+                const dialogueText = document.querySelector("#dialogueText");
+
+                // Dialogue lines
+                const dialogues = [
+                    "It was a long and hard battle, but we <span class='highlight'>won</span>.",
+                    "The smoke cleared, and <span class='highlight'>silence</span> returned to the koppie.",
+                    "But even <span class='highlight'>peace</span> fades without memory.",
+                    "Take this final fragment, and return it to the <span class='highlight'>heart</span> of the koppie.",
+                ];
 
                 // Add a click event listener to the model
                 airRunestone.addEventListener("click", (e) => {
@@ -62,6 +115,21 @@
 
                     // Play the guardian's theme music
                     airSound.play();
+
+                    // Start dialogue
+                    dialogueBox.style.display = "block";
+                    let i = 0;
+                    dialogueText.innerHTML = dialogues[i];
+                    i++;
+
+                    const interval = setInterval(() => {
+                        if (i < dialogues.length) {
+                            dialogueText.innerHTML = dialogues[i];
+                            i++;
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 5000); // Change every 5 seconds
                 });
             });
         </script>
